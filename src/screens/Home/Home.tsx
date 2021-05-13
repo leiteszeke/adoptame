@@ -11,6 +11,7 @@ import PetCard from 'components/PetCard';
 import Wrapper from 'components/Wrapper';
 import { Menu, Search } from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
+import { EventRegister } from 'react-native-event-listeners';
 
 const pet = {
   name: 'Henry',
@@ -40,9 +41,13 @@ const Home = () => {
 
   const goPet = (item: any) => navigation.navigate('Pet', item);
 
+  const openDrawer = () => {
+    EventRegister.emit('toggleDrawer');
+  };
+
   return (
     <Wrapper>
-      <TouchableOpacity style={apply(C.ml2, C.mt2)} onPress={() => {}}>
+      <TouchableOpacity style={apply(C.ml2, C.mt2)} onPress={openDrawer}>
         <Menu />
       </TouchableOpacity>
       <View

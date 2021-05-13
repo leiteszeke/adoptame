@@ -170,7 +170,7 @@ const Chat = () => {
         onPress={goChats}>
         <Back />
       </TouchableOpacity>
-      <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt2)}>
+      <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>
         <View
           style={apply(
             C.h12,
@@ -198,7 +198,7 @@ const Chat = () => {
           C.pt3,
           C.px4,
           {
-            height: '91.2%',
+            height: '91%',
             bottom: -insets.bottom - 12,
             paddingBottom: insets.bottom,
           },

@@ -68,10 +68,8 @@ const Chats = () => {
         onPress={() => navigation.goBack()}>
         <Back />
       </TouchableOpacity>
-      <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt2)}>
-        <Text style={apply(C.font8, C.ml3, C.textLight3, C.weightBold)}>
-          Chats
-        </Text>
+      <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>
+        <Text style={apply(C.font8, C.textLight3, C.weightBold)}>Chats</Text>
       </View>
       <View
         style={apply(
@@ -82,8 +80,8 @@ const Chats = () => {
           C.pt3,
           C.px4,
           {
-            height: '84%',
-            bottom: 14,
+            height: '83%',
+            bottom: 15,
             paddingBottom: insets.bottom - 8,
           },
         )}>
