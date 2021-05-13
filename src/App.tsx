@@ -2,7 +2,6 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { enableScreens } from 'react-native-screens';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import C, { apply, extend, theme } from 'consistencss';
@@ -12,11 +11,13 @@ import Settings from 'screens/Settings/Settings';
 import Chat from 'screens/Chat/Chat';
 import Pet from 'screens/Pet/Pet';
 import Favorites from 'screens/Favorites/Favorites';
+import Chats from 'screens/Chats/Chats';
+import { createStackNavigator } from '@react-navigation/stack';
 
 enableScreens();
 
 const Tab = createBottomTabNavigator();
-const Stack = createSharedElementStackNavigator();
+const Stack = createStackNavigator();
 
 extend({
   colors: {
@@ -34,6 +35,13 @@ extend({
     light3: '#FFFFFF',
 
     transparent: 'transparent',
+  },
+  fonts: {
+    PopBold: 'Poppins-Bold',
+    PopSemi: 'Poppins-SemiBold',
+    Pop: 'Poppins-Regular',
+    PopLight: 'Poppins-Light',
+    PopItalic: 'Poppins-Italic',
   },
   sizing: {
     minimum: 1,
@@ -58,12 +66,20 @@ const getIcon = (name: string) => {
   }
 };
 
-const tabBarOptions = (screen: string) => () => ({
+const tabBarOptions = (screen: string, options?: any) => () => ({
   tabBarIcon: ({ color }: { color: string }) => {
     const Icon = getIcon(screen);
     return Icon ? <Icon color={color} size={30} /> : null;
   },
+  ...options,
 });
+
+const ChatStack = () => (
+  <Stack.Navigator headerMode="none">
+    <Stack.Screen name="Chats" component={Chats} />
+    <Stack.Screen name="Chat" component={Chat} />
+  </Stack.Navigator>
+);
 
 const TabStack = () => (
   <Tab.Navigator
@@ -79,7 +95,11 @@ const TabStack = () => (
       options={tabBarOptions('Favorites')}
       component={Favorites}
     />
-    <Tab.Screen name="Chat" options={tabBarOptions('Chat')} component={Chat} />
+    <Tab.Screen
+      name="ChatStack"
+      options={tabBarOptions('Chat')}
+      component={ChatStack}
+    />
     <Tab.Screen
       name="Settings"
       options={tabBarOptions('Settings')}
@@ -92,18 +112,7 @@ const App = () => {
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Tabs" component={TabStack} />
-      <Stack.Screen
-        name="Pet"
-        component={Pet}
-        sharedElementsConfig={route => {
-          return [
-            {
-              id: `item.${route.params.id}.photo`,
-              animation: 'move',
-            },
-          ];
-        }}
-      />
+      <Stack.Screen name="Pet" component={Pet} />
     </Stack.Navigator>
   );
 };

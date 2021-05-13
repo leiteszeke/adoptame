@@ -3,8 +3,7 @@ import React from 'react';
 import { Image, ImageStyle, Text, TouchableOpacity, View } from 'react-native';
 import { PetCardProps } from './PetCard.types';
 import { Heart } from 'components/Icons';
-import { formatDistance } from 'helpers/date';
-import { SharedElement } from 'react-navigation-shared-element';
+import { format, formatDistance } from 'helpers/date';
 
 const PetCard = ({
   containerStyle,
@@ -15,15 +14,30 @@ const PetCard = ({
   image,
   horizontal,
   like,
+  owner,
+  description,
   onPress,
   location,
 }: PetCardProps) => {
+  const handlePress = () =>
+    onPress?.({
+      id,
+      name,
+      age,
+      date: format(date, 't'),
+      image,
+      like,
+      location,
+      owner,
+      description,
+    });
+
   if (horizontal) {
     return (
       <TouchableOpacity
-        onPress={() => onPress?.({ id, image })}
+        onPress={handlePress}
         style={apply(
-          C.bgWhite,
+          C.bgLight3,
           C.row,
           C.wFull,
           C.radius2,
@@ -31,16 +45,16 @@ const PetCard = ({
           C.p2,
           containerStyle,
         )}>
-        <SharedElement id={`item.${id}.photo`}>
-          <Image
-            source={{ uri: image }}
-            borderRadius={8}
-            style={apply(C.h30, C.w30) as ImageStyle}
-          />
-        </SharedElement>
+        <Image
+          source={{ uri: image }}
+          borderRadius={8}
+          style={apply(C.h30, C.w30) as ImageStyle}
+        />
         <View style={apply(C.ml2, C.flex)}>
           <View style={apply(C.flex)}>
-            <Text style={apply(C.weightBold, C.font5, C.mr1)} numberOfLines={1}>
+            <Text
+              style={apply(C.font5, C.mr1, C.familyPopBold)}
+              numberOfLines={1}>
               {name}
             </Text>
             <Text style={apply(C.font3, C.mt3)} numberOfLines={2}>
@@ -67,17 +81,15 @@ const PetCard = ({
 
   return (
     <TouchableOpacity
-      onPress={() => onPress?.({ id, image })}
-      style={apply(C.bgWhite, C.radius2, C.p2, C.flex, containerStyle)}>
-      <SharedElement id={`item.${id}.photo`}>
-        <Image
-          source={{ uri: image }}
-          borderRadius={8}
-          style={C.h28 as ImageStyle}
-        />
-      </SharedElement>
+      onPress={handlePress}
+      style={apply(C.bgLight3, C.radius2, C.p2, C.flex, containerStyle)}>
+      <Image
+        source={{ uri: image }}
+        borderRadius={8}
+        style={C.h28 as ImageStyle}
+      />
       <View style={apply(C.mt2, C.row, C.itemsCenter, C.justifyBetween)}>
-        <Text style={apply(C.weightBold, C.font5, C.mr1)} numberOfLines={1}>
+        <Text style={apply(C.familyPopBold, C.font5, C.mr1)} numberOfLines={1}>
           {name}
         </Text>
         <Text style={apply(C.font3)}>{age}</Text>

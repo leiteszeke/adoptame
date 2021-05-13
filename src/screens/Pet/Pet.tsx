@@ -9,19 +9,29 @@ import {
   View,
 } from 'react-native';
 import Wrapper from 'components/Wrapper';
-import { SharedElement } from 'react-navigation-shared-element';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Back, Heart, Location } from 'components/Icons';
 import C, { apply, theme } from 'consistencss';
+import { formatDistance } from 'helpers/date';
+import Button from 'components/Button';
+import { fromUnixTime } from 'date-fns';
 
 const { width } = Dimensions.get('screen');
 
 const Pet = () => {
   const navigation = useNavigation();
-  const { params } = useRoute();
-  // @ts-ignore
-  const { id, image }: { id: number; image: string } = params;
+  const { params } = useRoute<any>();
   const imageSize = width - 24;
+
+  const goChat = () =>
+    navigation.navigate('ChatStack', {
+      screen: 'Chat',
+      params: {
+        userId: params.owner.id,
+        name: params.name,
+        chatType: 'adoption',
+      },
+    });
 
   return (
     <Wrapper containerStyle={C.bgLight1} withTabs={false}>
@@ -34,30 +44,32 @@ const Pet = () => {
         <TouchableOpacity
           style={apply(C.mr3, C.mt3, C.h9, C.w9)}
           onPress={() => navigation.goBack()}>
-          <Heart size={32} outline={false} color={theme.colors.brand2} />
+          <Heart
+            size={32}
+            outline={!params.like}
+            color={params.like ? theme.colors.brand2 : theme.colors.dark1}
+          />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={apply(C.flex, C.itemsCenter, C.mt2)}>
-          <SharedElement id={`item.${id}.photo`}>
-            <Image
-              source={{ uri: image }}
-              borderRadius={8}
-              style={{ height: imageSize, width: imageSize }}
-            />
-          </SharedElement>
+          <Image
+            source={{ uri: params.image }}
+            borderRadius={8}
+            style={{ height: imageSize, width: imageSize }}
+          />
           <View
             style={apply(C.row, C.px3, C.mt4, C.justifyBetween, C.itemsCenter)}>
             <Text
               style={apply(C.font9, C.weightBold, C.flex)}
               numberOfLines={1}>
-              Charly
+              {params.name}
             </Text>
             <Text style={apply(C.font4)}>6 meses</Text>
           </View>
           <View style={apply(C.row, C.px3, C.wFull, C.itemsCenter, C.mt3)}>
             <Location color={theme.colors.brand2} />
-            <Text style={apply(C.ml1, C.font4)}>Quilmes, Bs. As.</Text>
+            <Text style={apply(C.ml1, C.font4)}>{params.location}</Text>
           </View>
           <View style={apply(C.row, C.wrap, C.wFull, C.px3, C.mt5)}>
             <View
@@ -65,11 +77,12 @@ const Pet = () => {
                 C.h12,
                 C.w12,
                 C.radius2,
-                C.borderDouble,
-                C.borderBrand2,
+                C.itemsCenter,
+                C.justifyCenter,
+                C.bgBrand2,
               )}>
               <Image
-                source={{ uri: 'https://picsum.photos/id/2/250/250' }}
+                source={{ uri: params.owner.image }}
                 borderRadius={8}
                 style={apply(C.h11, C.w11) as ImageStyle}
               />
@@ -79,37 +92,21 @@ const Pet = () => {
                 <Text
                   style={apply(C.font4, C.line5, C.weightSemiBold, C.flex)}
                   numberOfLines={1}>
-                  John Doe
+                  {params.owner.name}
                 </Text>
-                <Text style={apply(C.font3, C.textDark3)}>Dueño</Text>
+                <Text style={apply(C.font3, C.textDark3)}>
+                  {formatDistance(new Date(), fromUnixTime(params.date))}
+                </Text>
               </View>
               <Text style={apply(C.font3, C.line4, C.wFull, C.textDark3)}>
-                Dueño
+                {params.owner.role}
               </Text>
             </View>
           </View>
-          <Text style={apply(C.mx3, C.mt4)}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et nam
-            massa nullam neque morbi ut quis. Risus tortor, at morbi sit orci
-            dictum at. Rhoncus eget non senectus ultrices ut dui, nisl aliquam.
-            Ac ornare enim, in platea nunc ipsum sodales.
-          </Text>
+          <Text style={apply(C.mx3, C.mt4)}>{params.description}</Text>
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={apply(
-          C.mx3,
-          C.h13,
-          C.justifyCenter,
-          C.itemsCenter,
-          C.bgBrand2,
-          C.radius4,
-          C.mt2,
-        )}>
-        <Text style={apply(C.textWhite, C.weightSemiBold, C.font6)}>
-          Adoptame
-        </Text>
-      </TouchableOpacity>
+      <Button onPress={goChat} text="Adoptame" />
     </Wrapper>
   );
 };

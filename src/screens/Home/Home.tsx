@@ -18,6 +18,14 @@ const pet = {
   location: 'Fcio. Varela, Buenos Aires',
   age: '2 años',
   image: 'https://picsum.photos/id/10/250/250',
+  owner: {
+    id: 1,
+    name: 'John Doe',
+    image: 'https://picsum.photos/id/1/250/250',
+    role: 'Dueño',
+  },
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et nam massa nullam neque morbi ut quis. Risus tortor, at morbi sit orci dictum at. Rhoncus eget non senectus ultrices ut dui, nisl aliquam. Ac ornare enim, in platea nunc ipsum sodales.',
 };
 
 const pets = [
@@ -30,9 +38,7 @@ const pets = [
 const Home = () => {
   const navigation = useNavigation();
 
-  const goPet = (item: any) => {
-    navigation.navigate('Pet', { id: item.id, image: item.image });
-  };
+  const goPet = (item: any) => navigation.navigate('Pet', item);
 
   return (
     <Wrapper>
@@ -45,7 +51,7 @@ const Home = () => {
           C.row,
           C.h12,
           C.itemsCenter,
-          C.bgWhite,
+          C.bgLight3,
           C.radius3,
           C.mt2,
           C.px3,

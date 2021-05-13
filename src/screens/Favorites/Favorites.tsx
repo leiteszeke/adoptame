@@ -4,6 +4,7 @@ import C, { apply } from 'consistencss';
 import PetCard from 'components/PetCard';
 import Wrapper from 'components/Wrapper';
 import { Menu } from 'components/Icons';
+import { useNavigation } from '@react-navigation/native';
 
 const pet = {
   name: 'Henry',
@@ -11,12 +12,21 @@ const pet = {
   location: 'Fcio. Varela, Buenos Aires',
   age: '2 años',
   image: 'https://picsum.photos/id/10/250/250',
+  owner: {
+    name: 'John Doe',
+    image: 'https://picsum.photos/id/1/250/250',
+    role: 'Dueño',
+    id: 1,
+  },
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et nam massa nullam neque morbi ut quis. Risus tortor, at morbi sit orci dictum at. Rhoncus eget non senectus ultrices ut dui, nisl aliquam. Ac ornare enim, in platea nunc ipsum sodales.',
 };
 
 const pets = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const Favorites = () => {
-  const goPet = () => {};
+  const navigation = useNavigation();
+  const goPet = (petItem: any) => navigation.navigate('Pet', petItem);
 
   return (
     <Wrapper>
@@ -24,7 +34,9 @@ const Favorites = () => {
         <Menu />
       </TouchableOpacity>
       <View style={apply(C.mx3, C.h12, C.justifyCenter, C.mt2)}>
-        <Text style={apply(C.font8, C.textWhite, C.weightBold)}>Favoritos</Text>
+        <Text style={apply(C.font8, C.textLight3, C.weightBold)}>
+          Favoritos
+        </Text>
       </View>
       <ScrollView
         style={apply(
@@ -46,6 +58,7 @@ const Favorites = () => {
             <PetCard
               horizontal
               {...pet}
+              key={petI}
               id={petI}
               like={true}
               onPress={goPet}
