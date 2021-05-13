@@ -1,24 +1,29 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import { ScrollView, Text, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import { enableScreens } from 'react-native-screens';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import C, { apply, extend, theme } from 'consistencss';
 import * as Icons from 'components/Icons';
+import Home from 'screens/Home/Home';
+import Settings from 'screens/Settings/Settings';
+import Chat from 'screens/Chat/Chat';
+import Pet from 'screens/Pet/Pet';
+import Favorites from 'screens/Favorites/Favorites';
+
+enableScreens();
 
 const Tab = createBottomTabNavigator();
+const Stack = createSharedElementStackNavigator();
 
 extend({
   colors: {
     dark1: '#000000',
     dark2: '#343532',
     dark3: '#72746F',
+    dark4: '#C4C4C4',
 
     brand1: '#103900',
     brand2: '#059E54',
@@ -30,60 +35,12 @@ extend({
 
     transparent: 'transparent',
   },
+  sizing: {
+    minimum: 1,
+    double: 2,
+    dozen: 10,
+  },
 });
-
-const HomeScreen = () => (
-  <Wrapper withTabs>
-    <View
-      style={apply(
-        C.bgLight1,
-        C.absolute,
-        C.bottom0,
-        C.wFull,
-        C.radiustop4,
-        C.px4,
-        {
-          height: '90%',
-        },
-      )}>
-      <ScrollView style={apply(C.py4)}>
-        <Text>Home</Text>
-      </ScrollView>
-    </View>
-  </Wrapper>
-);
-
-const FavoritesScreen = () => (
-  <Wrapper withTabs>
-    <Text>Favorites</Text>
-  </Wrapper>
-);
-
-const ChatScreen = () => (
-  <Wrapper withTabs>
-    <Text>Chat</Text>
-  </Wrapper>
-);
-
-const SettingsScreen = () => (
-  <Wrapper withTabs>
-    <Text>Settings</Text>
-  </Wrapper>
-);
-
-const Wrapper = ({
-  children,
-  withTabs = false,
-}: PropsWithChildren<{ withTabs?: boolean }>) => {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <SafeAreaView
-      style={apply(C.flex, withTabs && { paddingBottom: -insets.bottom })}>
-      {children}
-    </SafeAreaView>
-  );
-};
 
 const getIcon = (name: string) => {
   switch (name) {
@@ -101,50 +58,57 @@ const getIcon = (name: string) => {
   }
 };
 
-const tabBarOptions = (screen: string) => () => {
-  return {
-    tabBarLabel: '',
-    tabBarIcon: ({ color }: { color: string }) => {
-      const Icon = getIcon(screen);
-      return Icon ? <Icon color={color} /> : null;
-    },
-  };
-};
+const tabBarOptions = (screen: string) => () => ({
+  tabBarIcon: ({ color }: { color: string }) => {
+    const Icon = getIcon(screen);
+    return Icon ? <Icon color={color} size={30} /> : null;
+  },
+});
+
+const TabStack = () => (
+  <Tab.Navigator
+    tabBarOptions={{
+      activeTintColor: theme.colors.dark1,
+      inactiveTintColor: theme.colors.light3,
+      style: apply(C.bgBrand2, C.radiustop4, C.absolute),
+      showLabel: false,
+    }}>
+    <Tab.Screen name="Home" options={tabBarOptions('Home')} component={Home} />
+    <Tab.Screen
+      name="Favorites"
+      options={tabBarOptions('Favorites')}
+      component={Favorites}
+    />
+    <Tab.Screen name="Chat" options={tabBarOptions('Chat')} component={Chat} />
+    <Tab.Screen
+      name="Settings"
+      options={tabBarOptions('Settings')}
+      component={Settings}
+    />
+  </Tab.Navigator>
+);
 
 const App = () => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: theme.colors.dark1,
-        inactiveTintColor: theme.colors.light3,
-        style: apply(C.bgBrand2, C.radiustop4),
-        showLabel: false,
-      }}>
-      <Tab.Screen
-        name="Home"
-        options={tabBarOptions('Home')}
-        component={HomeScreen}
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="Tabs" component={TabStack} />
+      <Stack.Screen
+        name="Pet"
+        component={Pet}
+        sharedElementsConfig={route => {
+          return [
+            {
+              id: `item.${route.params.id}.photo`,
+              animation: 'move',
+            },
+          ];
+        }}
       />
-      <Tab.Screen
-        name="Favorites"
-        options={tabBarOptions('Favorites')}
-        component={FavoritesScreen}
-      />
-      <Tab.Screen
-        name="Chat"
-        options={tabBarOptions('Chat')}
-        component={ChatScreen}
-      />
-      <Tab.Screen
-        name="Settings"
-        options={tabBarOptions('Settings')}
-        component={SettingsScreen}
-      />
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 };
 
-const Stack = () => {
+const AppStack = () => {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
@@ -154,4 +118,4 @@ const Stack = () => {
   );
 };
 
-export default Stack;
+export default AppStack;
