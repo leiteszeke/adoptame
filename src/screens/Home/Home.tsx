@@ -12,6 +12,8 @@ import Wrapper from 'components/Wrapper';
 import { Menu, Search } from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { EventRegister } from 'react-native-event-listeners';
+import { useQuery } from '@apollo/client';
+import { GET_PETS } from 'services/pets';
 
 const pet = {
   name: 'Henry',
@@ -38,12 +40,15 @@ const pets = [
 
 const Home = () => {
   const navigation = useNavigation();
+  const { loading, error, data } = useQuery(GET_PETS);
 
   const goPet = (item: any) => navigation.navigate('Pet', item);
 
   const openDrawer = () => {
     EventRegister.emit('toggleDrawer');
   };
+
+  console.log(loading, error, data);
 
   return (
     <Wrapper>

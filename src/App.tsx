@@ -16,6 +16,8 @@ import { Dimensions, TouchableOpacity, Text, View } from 'react-native';
 import Animated, { EasingNode } from 'react-native-reanimated';
 
 import { EventRegister } from 'react-native-event-listeners';
+import { ApolloProvider } from '@apollo/client';
+import GraphQLClient from './client';
 
 enableScreens();
 
@@ -231,11 +233,13 @@ const App = () => {
 
 const AppStack = () => {
   return (
-    <NavigationContainer>
-      <SafeAreaProvider>
-        <App />
-      </SafeAreaProvider>
-    </NavigationContainer>
+    <ApolloProvider client={GraphQLClient}>
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <App />
+        </SafeAreaProvider>
+      </NavigationContainer>
+    </ApolloProvider>
   );
 };
 
