@@ -1,21 +1,9 @@
 import { ViewStyle } from 'react-native';
+import { Pet } from 'services/pets';
 
-export type PetCardProps = {
+export type PetCardProps = Pet & {
   containerStyle?: ViewStyle;
-  id: number;
-  date: Date;
-  name: string;
   horizontal?: boolean;
-  like?: boolean;
-  image: string;
-  age: string;
-  location?: string;
-  onPress?: (item: any) => void;
-  owner: {
-    name: string;
-    image: string;
-    role: string;
-    id: number;
-  };
-  description: string;
+  onPress?: (item: Pet) => void;
+  onToggle?: () => void;
 };

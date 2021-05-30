@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ScrollView,
   TextInput,
@@ -7,40 +7,18 @@ import {
   ViewStyle,
 } from 'react-native';
 import C, { apply, theme } from 'consistencss';
-import PetCard from 'components/PetCard';
+import PetCard, { EmptyPetCard } from 'components/PetCard';
 import Wrapper from 'components/Wrapper';
 import { Menu, Search } from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { EventRegister } from 'react-native-event-listeners';
 import { useQuery } from '@apollo/client';
-import { GET_PETS } from 'services/pets';
-
-const pet = {
-  name: 'Henry',
-  date: new Date(2020, 1, 1),
-  location: 'Fcio. Varela, Buenos Aires',
-  age: '2 años',
-  image: 'https://picsum.photos/id/10/250/250',
-  owner: {
-    id: 1,
-    name: 'John Doe',
-    image: 'https://picsum.photos/id/1/250/250',
-    role: 'Dueño',
-  },
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et nam massa nullam neque morbi ut quis. Risus tortor, at morbi sit orci dictum at. Rhoncus eget non senectus ultrices ut dui, nisl aliquam. Ac ornare enim, in platea nunc ipsum sodales.',
-};
-
-const pets = [
-  [1, 2],
-  [3, 4],
-  [5, 6],
-  [7, 8],
-];
+import { GET_PETS, Pet } from 'services/pets';
+import { chunk } from 'lodash';
 
 const Home = () => {
   const navigation = useNavigation();
-  const { loading, error, data } = useQuery(GET_PETS);
+  const { data } = useQuery<{ pets: Pet[] }>(GET_PETS);
 
   const goPet = (item: any) => navigation.navigate('Pet', item);
 
@@ -48,7 +26,21 @@ const Home = () => {
     EventRegister.emit('toggleDrawer');
   };
 
-  console.log(loading, error, data);
+  const pets = useMemo(() => {
+    if (!data || !data?.pets) {
+      return [];
+    }
+
+    const chunked: Array<Pet | null>[] = chunk(data?.pets, 2);
+
+    chunked.forEach(chunky => {
+      if (chunky.length === 1) {
+        chunky.push(null);
+      }
+    });
+
+    return chunked;
+  }, [data]);
 
   return (
     <Wrapper>
@@ -94,26 +86,20 @@ const Home = () => {
           <View
             key={petIndex}
             style={apply(C.row, C.itemsStart, C.mb4, C.justifyBetween)}>
-            {petRow.map((petI, index) => {
+            {petRow.map((pet, index) => {
+              if (!pet) {
+                return <EmptyPetCard key={index} />;
+              }
+
               if (index % 2 === 0) {
-                return (
-                  <PetCard
-                    {...pet}
-                    id={petI}
-                    key={index}
-                    like={true}
-                    onPress={goPet}
-                  />
-                );
+                return <PetCard {...pet} key={pet.id} onPress={goPet} />;
               }
 
               return (
                 <PetCard
                   containerStyle={apply(C.top8, C.ml4) as ViewStyle}
                   {...pet}
-                  key={index}
-                  id={petI}
-                  like={false}
+                  key={pet.id}
                   onPress={goPet}
                 />
               );

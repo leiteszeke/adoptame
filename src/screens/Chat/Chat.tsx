@@ -156,7 +156,9 @@ const Chat = () => {
   );
 
   const goChats = () => {
-    navigation.dispatch(StackActions.popToTop());
+    navigation.navigate('ChatStack', {
+      screen: 'Chats',
+    });
   };
 
   if (!chatPage) {
