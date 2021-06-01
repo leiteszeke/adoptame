@@ -15,7 +15,8 @@ import { formatDistanceStrict } from 'helpers/date';
 import Button from 'components/Button';
 import { useMutation } from '@apollo/client';
 import { CREATE_PET_LIKE, DELETE_PET_LIKE } from 'services/petLikes';
-import { Pet } from 'services/pets';
+import { GET_PETS, Pet } from 'services/pets';
+import * as Images from 'assets/images';
 
 const { width } = Dimensions.get('screen');
 
@@ -25,6 +26,12 @@ const PetScreen = () => {
   const [pet, setPet] = useState<Pet | null>(null);
   const [likeMutation] = useMutation(
     pet?.like ? DELETE_PET_LIKE : CREATE_PET_LIKE,
+    {
+      refetchQueries: [
+        { query: GET_PETS },
+        { query: GET_PETS, variables: { like: true } },
+      ],
+    },
   );
   const imageSize = width - 24;
 
@@ -32,14 +39,14 @@ const PetScreen = () => {
     navigation.navigate('ChatStack', {
       screen: 'Chat',
       params: {
-        userId: pet?.owner.id,
+        userId: pet?.owner._id,
         name: pet?.name,
         chatType: 'adoption',
       },
     });
 
   const toggleLike = async () => {
-    const mutation = await likeMutation({ variables: { petId: pet?.id } });
+    const mutation = await likeMutation({ variables: { petId: pet?._id } });
 
     if (mutation.data.pet) {
       setPet(mutation.data.pet);
@@ -51,16 +58,12 @@ const PetScreen = () => {
       return { uri: pet.owner.image };
     }
 
-    return {
-      uri: 'https://res.cloudinary.com/leiteszeke/image/upload/v1622408932/adoptame/placeholders/user-placeholder_kqkzxz.png',
-    };
+    return { uri: Images.Placeholders.User };
   }, [pet]);
 
   const petImage = useMemo(() => {
     if (!pet) {
-      return {
-        uri: 'https://res.cloudinary.com/leiteszeke/image/upload/v1622408979/adoptame/placeholders/dog-placeholder_famgpe.png',
-      };
+      return { uri: Images.Placeholders.Dog };
     }
 
     if (pet.photos?.length > 0) {

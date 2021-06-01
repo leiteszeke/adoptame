@@ -92,14 +92,14 @@ const Home = () => {
               }
 
               if (index % 2 === 0) {
-                return <PetCard {...pet} key={pet.id} onPress={goPet} />;
+                return <PetCard {...pet} key={pet._id} onPress={goPet} />;
               }
 
               return (
                 <PetCard
                   containerStyle={apply(C.top8, C.ml4) as ViewStyle}
                   {...pet}
-                  key={pet.id}
+                  key={pet._id}
                   onPress={goPet}
                 />
               );

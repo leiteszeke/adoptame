@@ -18,7 +18,7 @@ export const EmptyPetCard = ({ horizontal = false }) =>
 
 const PetCard = ({
   containerStyle,
-  id,
+  _id,
   name,
   birth,
   publishedAt,
@@ -40,7 +40,7 @@ const PetCard = ({
 
   const handlePress = () =>
     onPress?.({
-      id,
+      _id,
       name,
       birth,
       publishedAt,
@@ -53,7 +53,7 @@ const PetCard = ({
     });
 
   const toggleLike = async () => {
-    likeMutation({ variables: { petId: id } });
+    likeMutation({ variables: { petId: _id } });
   };
 
   const innerImage = useMemo(() => {

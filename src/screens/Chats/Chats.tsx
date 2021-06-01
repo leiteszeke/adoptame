@@ -12,18 +12,23 @@ import Wrapper from 'components/Wrapper';
 import { Back } from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useQuery } from '@apollo/client';
+import { Chat, GET_CHATS } from 'services/chats';
+import * as Images from 'assets/images';
+import { User } from 'services/users';
 
 const Chats = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { data } = useQuery<{ chats: Chat[] }>(GET_CHATS);
 
-  const goChat = (id: number) => () => {
-    navigation.navigate('Chat', { userId: id });
+  const goChat = (_id: string, other: User) => () => {
+    navigation.navigate('Chat', { _id, other });
   };
 
-  const renderItem = ({ item }: { item: { id: number } }) => (
+  const renderItem = ({ item: chat }: { item: Chat }) => (
     <TouchableOpacity
-      onPress={goChat(item.id)}
+      onPress={goChat(chat._id, chat.other)}
       style={apply(
         C.h16,
         C.itemsCenter,
@@ -43,14 +48,14 @@ const Chats = () => {
           C.justifyCenter,
         )}>
         <Image
-          source={{ uri: `https://picsum.photos/id/${item.id}/100/100` }}
+          source={{ uri: chat.other.image ?? Images.Placeholders.User }}
           borderRadius={8}
           style={apply(C.h11, C.w11) as ImageStyle}
         />
       </View>
       <View style={apply(C.flex, C.justifyBetween, C.ml3)}>
         <View style={apply(C.flex, C.row, C.justifyBetween, C.itemsCenter)}>
-          <Text style={apply(C.familyPopSemi, C.font5)}>John Doe</Text>
+          <Text style={apply(C.familyPopSemi, C.font5)}>{chat.other.name}</Text>
           <Text style={apply(C.textDark3, C.alignRight, C.font3)}>12:22</Text>
         </View>
         <Text numberOfLines={1} style={apply(C.font3)}>
@@ -86,10 +91,8 @@ const Chats = () => {
           },
         )}>
         <FlatList
-          data={Array(10)
-            .fill(null)
-            .map((_, index) => ({ id: index + 1 }))}
-          keyExtractor={i => i.id.toString()}
+          data={data?.chats ?? []}
+          keyExtractor={i => i._id}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
         />

@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client';
+import { User, USER_FRAGMENT } from './users';
 
 export const PET_FRAGMENT = gql`
   fragment PetFragment on Pet {
-    id
+    _id
     name
     location
     photos
@@ -14,27 +15,22 @@ export const PET_FRAGMENT = gql`
     }
     like
     owner {
-      id
-      name
-      image
+      ...UserFragment
     }
   }
+
+  ${USER_FRAGMENT}
 `;
 
 export type Pet = {
-  id: string;
+  _id: string;
   name: string;
   location: string;
   photos: string[];
   birth: number;
   description?: string;
   publishedAt: number;
-  owner: {
-    name: string;
-    image: string;
-    role: string;
-    id: number;
-  };
+  owner: User;
   type: {
     name: string;
     image: string;

@@ -41,7 +41,7 @@ const Favorites = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={apply(C.pb6)}>
         {data?.pets?.map(pet => (
-          <PetCard key={pet.id} horizontal {...pet} onPress={goPet} />
+          <PetCard key={pet._id} horizontal {...pet} onPress={goPet} />
         ))}
       </ScrollView>
     </Wrapper>
