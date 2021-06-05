@@ -69,7 +69,9 @@ const Chats = () => {
     </TouchableOpacity>
   );
 
-  const openLogin = () => {};
+  const openLogin = () => {
+    navigation.navigate('Login');
+  };
 
   if (!user) {
     return (

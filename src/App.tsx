@@ -20,8 +20,8 @@ import { ApolloProvider } from '@apollo/client';
 import GraphQLClient from './client';
 import AuthProvider from 'contexts/Auth';
 import { authInitialState, AuthReducer } from 'reducers/AuthReducer';
-import { useUser } from 'hooks/Auth';
 import SideMenu from 'components/SideMenu';
+import Login from 'screens/Login/Login';
 
 enableScreens();
 
@@ -183,9 +183,10 @@ const App = () => {
             zIndex: show ? 4 : 0,
           })}
         />
-        <Stack.Navigator headerMode="none">
+        <Stack.Navigator mode="modal" headerMode="none">
           <Stack.Screen name="Tabs" component={TabStack} />
           <Stack.Screen name="Pet" component={Pet} />
+          <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </Animated.View>
     </>
