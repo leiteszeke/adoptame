@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { enableScreens } from 'react-native-screens';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import C, { apply, extend, theme } from 'consistencss';
 import * as Icons from 'components/Icons';
 import Home from 'screens/Home/Home';
@@ -12,12 +12,16 @@ import Pet from 'screens/Pet/Pet';
 import Favorites from 'screens/Favorites/Favorites';
 import Chats from 'screens/Chats/Chats';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Dimensions, TouchableOpacity, Text, View } from 'react-native';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
 import Animated, { EasingNode } from 'react-native-reanimated';
 
 import { EventRegister } from 'react-native-event-listeners';
 import { ApolloProvider } from '@apollo/client';
 import GraphQLClient from './client';
+import AuthProvider from 'contexts/Auth';
+import { authInitialState, AuthReducer } from 'reducers/AuthReducer';
+import { useUser } from 'hooks/Auth';
+import SideMenu from 'components/SideMenu';
 
 enableScreens();
 
@@ -164,50 +168,7 @@ const App = () => {
           transform: [{ translateX: translateX as unknown as number }],
         })}>
         <View style={apply(C.bgBrand2, C.wFull, C.hFull)}>
-          <SafeAreaView style={apply(C.flex, C.px4, C.py2)}>
-            <View style={apply(C.flex)}>
-              <TouchableOpacity style={apply(C.row, C.itemsCenter, C.h12)}>
-                <Icons.Donate />
-                <Text
-                  style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-                  Donar
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
-                <Icons.Foot />
-                <Text
-                  style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-                  Agregar mascota
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
-                <Icons.Heart outline={false} />
-                <Text
-                  style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-                  Favoritos
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
-                <Icons.Chat />
-                <Text
-                  style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-                  Mensajes
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity style={apply(C.row, C.itemsCenter, C.h12)}>
-                <Icons.Logout />
-                <Text
-                  style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-                  Salir
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
+          <SideMenu />
         </View>
       </Animated.View>
       <Animated.View
@@ -236,7 +197,9 @@ const AppStack = () => {
     <ApolloProvider client={GraphQLClient}>
       <NavigationContainer>
         <SafeAreaProvider>
-          <App />
+          <AuthProvider initialState={authInitialState} reducer={AuthReducer}>
+            <App />
+          </AuthProvider>
         </SafeAreaProvider>
       </NavigationContainer>
     </ApolloProvider>

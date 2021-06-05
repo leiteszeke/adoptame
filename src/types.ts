@@ -7,3 +7,10 @@ export type Generic<T = any> = {
 export type RootStackParamList = {
   Chat: { _id: string; other: User };
 };
+
+export type Reducer<S, A> = (prevState: S, action: A) => S;
+
+export type ReducerAction<P, T = string> = {
+  type: T;
+  payload?: Partial<P>;
+};

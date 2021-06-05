@@ -8,6 +8,7 @@ import { formatDistanceStrict } from 'helpers/date';
 import { useMutation } from '@apollo/client';
 import { CREATE_PET_LIKE, DELETE_PET_LIKE } from 'services/petLikes';
 import { GET_PETS } from 'services/pets';
+import { useUser } from 'hooks/Auth';
 
 export const EmptyPetCard = ({ horizontal = false }) =>
   horizontal ? (
@@ -31,6 +32,7 @@ const PetCard = ({
   onPress,
   location,
 }: PetCardProps) => {
+  const user = useUser();
   const [likeMutation] = useMutation(like ? DELETE_PET_LIKE : CREATE_PET_LIKE, {
     refetchQueries: [
       { query: GET_PETS },
@@ -99,13 +101,15 @@ const PetCard = ({
             <Text style={apply(C.font3)}>
               {birth ? formatDistanceStrict(new Date(birth), new Date()) : ''}
             </Text>
-            <TouchableOpacity onPress={toggleLike}>
-              <Heart
-                color={like ? theme.colors.brand2 : theme.colors.dark1}
-                size={24}
-                outline={!like}
-              />
-            </TouchableOpacity>
+            {user && (
+              <TouchableOpacity onPress={toggleLike}>
+                <Heart
+                  color={like ? theme.colors.brand2 : theme.colors.dark1}
+                  size={24}
+                  outline={!like}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -135,13 +139,15 @@ const PetCard = ({
         <Text style={apply(C.font3, C.textDark3)}>
           {formatDistanceStrict(new Date(publishedAt), new Date())}
         </Text>
-        <TouchableOpacity onPress={toggleLike}>
-          <Heart
-            color={like ? theme.colors.brand2 : theme.colors.dark1}
-            size={16}
-            outline={!like}
-          />
-        </TouchableOpacity>
+        {user && (
+          <TouchableOpacity onPress={toggleLike}>
+            <Heart
+              color={like ? theme.colors.brand2 : theme.colors.dark1}
+              size={16}
+              outline={!like}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );

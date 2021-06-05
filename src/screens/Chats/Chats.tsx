@@ -16,10 +16,13 @@ import { useQuery } from '@apollo/client';
 import { Chat, GET_CHATS } from 'services/chats';
 import * as Images from 'assets/images';
 import { User } from 'services/users';
+import { useUser } from 'hooks/Auth';
+import NotLoggedScreen from 'components/NotLoggedScreen';
 
 const Chats = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const user = useUser();
   const { data } = useQuery<{ chats: Chat[] }>(GET_CHATS);
 
   const goChat = (_id: string, other: User) => () => {
@@ -65,6 +68,18 @@ const Chats = () => {
       </View>
     </TouchableOpacity>
   );
+
+  const openLogin = () => {};
+
+  if (!user) {
+    return (
+      <NotLoggedScreen
+        message="Necesitamos saber quien esos para poder mostrarte tus chats"
+        buttonText="Ingresar"
+        onPress={openLogin}
+      />
+    );
+  }
 
   return (
     <Wrapper withTabs={false}>

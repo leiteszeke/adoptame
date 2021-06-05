@@ -7,13 +7,28 @@ import { Menu } from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@apollo/client';
 import { GET_PETS, Pet } from 'services/pets';
+import NotLoggedScreen from 'components/NotLoggedScreen';
+import { useUser } from 'hooks/Auth';
 
 const Favorites = () => {
+  const user = useUser();
   const navigation = useNavigation();
   const goPet = (petItem: any) => navigation.navigate('Pet', petItem);
   const { data } = useQuery<{ pets: Pet[] }>(GET_PETS, {
     variables: { like: true },
   });
+
+  const openLogin = () => {};
+
+  if (!user) {
+    return (
+      <NotLoggedScreen
+        message="Necesitamos saber quien esos para poder mostrarte tus favoritos"
+        buttonText="Ingresar"
+        onPress={openLogin}
+      />
+    );
+  }
 
   return (
     <Wrapper>
