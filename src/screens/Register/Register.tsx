@@ -1,22 +1,21 @@
 import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import Button from 'components/Button';
-import { Back } from 'components/Icons';
 import Input, { ForwardedInputProps } from 'components/Input';
 import Wrapper from 'components/Wrapper';
 import C, { apply } from 'consistencss';
 import { useAuthDispatch } from 'hooks/Auth';
 import React, { useRef } from 'react';
-import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Text, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthReducerAction } from 'reducers/AuthReducer';
-import { LOGIN_USER } from 'services/users';
+import { REGISTER_USER } from 'services/users';
 
-const Login = () => {
-  const { goBack, navigate } = useNavigation();
+const Register = () => {
+  const { goBack } = useNavigation();
   const dispatch = useAuthDispatch();
   const insets = useSafeAreaInsets();
-  const [loginMutation] = useMutation(LOGIN_USER, {
+  const [registerMutation] = useMutation(REGISTER_USER, {
     onCompleted: ({ user }) => {
       if (user) {
         dispatch?.({
@@ -30,16 +29,23 @@ const Login = () => {
   });
 
   const form = {
+    name: useRef<ForwardedInputProps>(null),
+    lastname: useRef<ForwardedInputProps>(null),
     email: useRef<ForwardedInputProps>(null),
     password: useRef<ForwardedInputProps>(null),
+    rePassword: useRef<ForwardedInputProps>(null),
   };
 
-  const onLogin = () => {
+  const onRegister = () => {
+    const name = form.name.current?.getValue();
+    const lastname = form.lastname.current?.getValue();
     const email = form.email.current?.getValue();
     const password = form.password.current?.getValue();
 
-    loginMutation({
+    registerMutation({
       variables: {
+        name,
+        lastname,
         email,
         password,
       },
@@ -48,13 +54,11 @@ const Login = () => {
 
   return (
     <Wrapper withTabs={false}>
-      <TouchableOpacity
-        style={apply(C.ml3, C.mt3, C.h9, C.w9)}
-        onPress={goBack}>
-        <Back />
-      </TouchableOpacity>
+      <View style={apply(C.ml3, C.mt3, C.h9, C.w9)} />
       <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>
-        <Text style={apply(C.font8, C.textLight3, C.weightBold)}>Ingresa</Text>
+        <Text style={apply(C.font8, C.textLight3, C.weightBold)}>
+          Crea tu cuenta
+        </Text>
       </View>
       <View
         style={apply(
@@ -70,19 +74,34 @@ const Login = () => {
             paddingBottom: insets.bottom,
           },
         )}>
-        <Input label="Email" ref={form.email} />
+        <View style={apply(C.row, C.wFull)}>
+          <View style={apply(C.flex, C.mr2)}>
+            <Input ref={form.name} label="Nombre" />
+          </View>
+          <View style={apply(C.flex, C.ml2)}>
+            <Input ref={form.lastname} label="Apellido" />
+          </View>
+        </View>
         <View style={C.h7} />
-        <Input label="Contraseña" ref={form.password} secureTextEntry />
+        <Input ref={form.email} label="Email" />
+        <View style={C.h7} />
+        <Input ref={form.password} label="Contraseña" secureTextEntry />
+        <View style={C.h7} />
+        <Input
+          ref={form.rePassword}
+          label="Repetir contraseña"
+          secureTextEntry
+        />
         <View style={C.flex} />
-        <Button text="Ingresar" onPress={onLogin} />
+        <Button onPress={onRegister} text="Crear cuenta" />
         <Button
           containerStyle={apply(C.mt6, C.mb4) as ViewStyle}
-          text="Crear una cuenta"
-          onPress={() => navigate('Register')}
+          text="Ya tengo una cuenta"
+          onPress={() => goBack()}
         />
       </View>
     </Wrapper>
   );
 };
 
-export default Login;
+export default Register;

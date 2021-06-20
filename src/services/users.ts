@@ -5,7 +5,11 @@ export type User = {
   image: string;
   lastname: string | null;
   role: string;
-  _id: number;
+  _id: string;
+};
+
+export type UserWithToken = User & {
+  accessToken: string;
 };
 
 export const USER_FRAGMENT = gql`
@@ -15,4 +19,37 @@ export const USER_FRAGMENT = gql`
     lastname
     image
   }
+
+  fragment UserWithTokenFragment on User {
+    ...UserFragment
+    accessToken
+  }
+`;
+
+export const LOGIN_USER = gql`
+  mutation ($email: String!, $password: String!) {
+    user: loginUser(email: $email, password: $password) {
+      ...UserWithTokenFragment
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
+export const REGISTER_USER = gql`
+  mutation (
+    $name: String!
+    $lastname: String
+    $email: String!
+    $password: String!
+  ) {
+    user: createUser(
+      name: $name
+      lastname: $lastname
+      email: $email
+      password: $password
+    ) {
+      ...UserWithTokenFragment
+    }
+  }
+  ${USER_FRAGMENT}
 `;

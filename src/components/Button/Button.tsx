@@ -16,7 +16,6 @@ const Button = ({ containerStyle, text, onPress }: ButtonProps) => {
         C.itemsCenter,
         C.bgBrand2,
         C.radius4,
-        C.mx3,
         C.mt3,
         containerStyle,
       )}

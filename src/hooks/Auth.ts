@@ -6,3 +6,9 @@ export const useUser = () => {
 
   return context.state?.user ?? null;
 };
+
+export const useAuthDispatch = () => {
+  const context = useContext(AuthContext);
+
+  return context.dispatch;
+};

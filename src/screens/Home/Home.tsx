@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ScrollView,
   TextInput,
@@ -14,17 +14,27 @@ import { useNavigation } from '@react-navigation/native';
 import { EventRegister } from 'react-native-event-listeners';
 import { useQuery } from '@apollo/client';
 import { GET_PETS, Pet } from 'services/pets';
-import { chunk } from 'lodash';
+import { chunk, debounce } from 'lodash';
+import { DogWalking } from 'components/Illustrations';
+import NoResultsScreen from 'components/NoResultsScreen';
 
 const Home = () => {
   const navigation = useNavigation();
-  const { data } = useQuery<{ pets: Pet[] }>(GET_PETS);
+  const [search, setSearch] = useState<string>('');
+  const { data, refetch } = useQuery<{ pets: Pet[] }>(GET_PETS, {
+    variables: { name: search },
+  });
 
   const goPet = (item: any) => navigation.navigate('Pet', item);
 
   const openDrawer = () => {
     EventRegister.emit('toggleDrawer');
   };
+
+  const onSearch = (value: string) => setSearch(value);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleSearch = useCallback(debounce(onSearch, 2000), []);
 
   const pets = useMemo(() => {
     if (!data || !data?.pets) {
@@ -41,6 +51,10 @@ const Home = () => {
 
     return chunked;
   }, [data]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, search]);
 
   return (
     <Wrapper>
@@ -63,6 +77,7 @@ const Home = () => {
           style={apply(C.hFull, C.flex, C.px4, C.italic)}
           placeholderTextColor={theme.colors.dark3}
           placeholder="Buscá tu mascota..."
+          onChangeText={handleSearch}
         />
       </View>
       <ScrollView
@@ -82,6 +97,16 @@ const Home = () => {
         )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={apply(C.flex, C.pb14)}>
+        {pets.length === 0 && (
+          <NoResultsScreen
+            component={DogWalking}
+            message={
+              search.length === 0
+                ? 'De momento, no tenemos mascotas en adopción.'
+                : 'No hay resultados para tu búsqueda.'
+            }
+          />
+        )}
         {pets.map((petRow, petIndex) => (
           <View
             key={petIndex}

@@ -1,3 +1,4 @@
+import DogWalking from './DogWalking';
 import NotLogged from './NotLogged';
 
-export { NotLogged };
+export { DogWalking, NotLogged };

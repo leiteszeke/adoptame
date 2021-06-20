@@ -20,13 +20,13 @@ import { useUser } from 'hooks/Auth';
 import NotLoggedScreen from 'components/NotLoggedScreen';
 
 const Chats = () => {
-  const navigation = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const insets = useSafeAreaInsets();
   const user = useUser();
   const { data } = useQuery<{ chats: Chat[] }>(GET_CHATS);
 
   const goChat = (_id: string, other: User) => () => {
-    navigation.navigate('Chat', { _id, other });
+    navigate('Chat', { _id, other });
   };
 
   const renderItem = ({ item: chat }: { item: Chat }) => (
@@ -70,7 +70,7 @@ const Chats = () => {
   );
 
   const openLogin = () => {
-    navigation.navigate('Login');
+    navigate('Login');
   };
 
   if (!user) {
@@ -87,7 +87,7 @@ const Chats = () => {
     <Wrapper withTabs={false}>
       <TouchableOpacity
         style={apply(C.ml3, C.mt3, C.h9, C.w9)}
-        onPress={() => navigation.goBack()}>
+        onPress={() => goBack()}>
         <Back />
       </TouchableOpacity>
       <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>

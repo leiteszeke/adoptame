@@ -22,6 +22,8 @@ import AuthProvider from 'contexts/Auth';
 import { authInitialState, AuthReducer } from 'reducers/AuthReducer';
 import SideMenu from 'components/SideMenu';
 import Login from 'screens/Login/Login';
+import Register from 'screens/Register/Register';
+import { navigationRef } from 'services/navigation';
 
 enableScreens();
 
@@ -187,6 +189,7 @@ const App = () => {
           <Stack.Screen name="Tabs" component={TabStack} />
           <Stack.Screen name="Pet" component={Pet} />
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
         </Stack.Navigator>
       </Animated.View>
     </>
@@ -196,7 +199,7 @@ const App = () => {
 const AppStack = () => {
   return (
     <ApolloProvider client={GraphQLClient}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <SafeAreaProvider>
           <AuthProvider initialState={authInitialState} reducer={AuthReducer}>
             <App />
