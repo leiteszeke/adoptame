@@ -1,4 +1,6 @@
+import { clearSession, getSession, setSession } from 'helpers/session';
 import { Dispatch } from 'react';
+import { UserWithToken } from 'services/users';
 import { Reducer, ReducerAction } from 'types';
 
 export type User = {
@@ -9,7 +11,7 @@ export type User = {
 };
 
 export type AuthState = {
-  user: User | null;
+  user: UserWithToken | null;
 };
 
 export type AuthContextProps = {
@@ -20,10 +22,11 @@ export type AuthContextProps = {
 export enum AuthReducerAction {
   LOGIN = 'Login',
   LOGOUT = 'Logout',
+  INIT = 'Init',
 }
 
 export type AuthInputState = {
-  user: User | null;
+  user: UserWithToken | null;
 };
 
 export const authInitialState: AuthState = {
@@ -35,21 +38,33 @@ export type AuthReducerProps = {
   reducer: Reducer<AuthState, ReducerAction<AuthInputState>>;
 };
 
-export const AuthReducer = (
+export const AuthReducer = async (
   state = authInitialState,
   action: ReducerAction<AuthInputState>,
 ) => {
   switch (action.type) {
     case AuthReducerAction.LOGIN:
+      setSession(action.payload?.user ?? state.user ?? null);
+
       return {
         ...state,
         user: action.payload?.user ?? state.user ?? null,
       };
 
     case AuthReducerAction.LOGOUT:
+      clearSession();
+
       return {
         ...state,
         user: null,
+      };
+
+    case AuthReducerAction.INIT:
+      const user = await getSession();
+
+      return {
+        ...state,
+        user: user ?? null,
       };
 
     default:

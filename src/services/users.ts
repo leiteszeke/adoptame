@@ -19,11 +19,15 @@ export const USER_FRAGMENT = gql`
     lastname
     image
   }
+`;
 
+export const USER_WITH_TOKEN_FRAGMENT = gql`
   fragment UserWithTokenFragment on User {
     ...UserFragment
     accessToken
   }
+
+  ${USER_FRAGMENT}
 `;
 
 export const LOGIN_USER = gql`
@@ -32,7 +36,7 @@ export const LOGIN_USER = gql`
       ...UserWithTokenFragment
     }
   }
-  ${USER_FRAGMENT}
+  ${USER_WITH_TOKEN_FRAGMENT}
 `;
 
 export const REGISTER_USER = gql`
@@ -51,5 +55,5 @@ export const REGISTER_USER = gql`
       ...UserWithTokenFragment
     }
   }
-  ${USER_FRAGMENT}
+  ${USER_WITH_TOKEN_FRAGMENT}
 `;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import C, { apply } from 'consistencss';
 import PetCard from 'components/PetCard';
@@ -9,16 +9,24 @@ import { useQuery } from '@apollo/client';
 import { GET_PETS, Pet } from 'services/pets';
 import NotLoggedScreen from 'components/NotLoggedScreen';
 import { useUser } from 'hooks/Auth';
+import NoResultsScreen from 'components/NoResultsScreen';
+import { DogWalking } from 'components/Illustrations';
 
 const Favorites = () => {
   const user = useUser();
-  const navigation = useNavigation();
-  const goPet = (petItem: any) => navigation.navigate('Pet', petItem);
-  const { data } = useQuery<{ pets: Pet[] }>(GET_PETS, {
+  const { navigate } = useNavigation();
+  const goPet = (petItem: any) => navigate('Pet', petItem);
+  const { data, refetch } = useQuery<{ pets: Pet[] }>(GET_PETS, {
     variables: { like: true },
   });
 
-  const openLogin = () => {};
+  const openLogin = () => navigate('Login');
+
+  useEffect(() => {
+    if (user) {
+      refetch();
+    }
+  }, [user, refetch]);
 
   if (!user) {
     return (
@@ -55,6 +63,12 @@ const Favorites = () => {
         )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={apply(C.pb6)}>
+        {data?.pets.length === 0 && (
+          <NoResultsScreen
+            component={DogWalking}
+            message={'No hay resultados para tu búsqueda.'}
+          />
+        )}
         {data?.pets?.map(pet => (
           <PetCard key={pet._id} horizontal {...pet} onPress={goPet} />
         ))}

@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
-import Button from 'components/Button';
+import Button, { ButtonVariant } from 'components/Button';
 import Input, { ForwardedInputProps } from 'components/Input';
 import Wrapper from 'components/Wrapper';
 import C, { apply } from 'consistencss';
@@ -97,6 +97,7 @@ const Register = () => {
         <Button
           containerStyle={apply(C.mt6, C.mb4) as ViewStyle}
           text="Ya tengo una cuenta"
+          variant={ButtonVariant.Secondary}
           onPress={() => goBack()}
         />
       </View>

@@ -31,14 +31,15 @@ export const SideMenu = () => {
             Donar
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
-          <Icons.Foot />
-          <Text style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
-            Agregar mascota
-          </Text>
-        </TouchableOpacity>
         {user && (
           <>
+            <TouchableOpacity style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
+              <Icons.Foot />
+              <Text
+                style={apply(C.ml3, C.font4, C.familyPopSemi, C.textLight3)}>
+                Agregar mascota
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={apply(C.row, C.mt2, C.itemsCenter, C.h12)}>
               <Icons.Heart outline={false} />
               <Text

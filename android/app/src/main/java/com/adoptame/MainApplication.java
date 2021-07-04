@@ -14,6 +14,9 @@ import java.util.List;
 import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
+import com.adoptame.CustomMMKVJSIModulePackage; // <- add here
+import com.facebook.react.bridge.JSIModulePackage; // <-- ADD THIS
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -39,7 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected JSIModulePackage getJSIModulePackage() {
-          return new ReanimatedJSIModulePackage();
+          return new CustomMMKVJSIModulePackage();
         }
       };
 
