@@ -20,7 +20,7 @@ const AuthProvider = ({
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    dispatch(AuthReducerAction.INIT);
+    dispatch({ type: AuthReducerAction.INIT });
   }, []);
 
   return (

@@ -16,7 +16,7 @@ export type AuthState = {
 
 export type AuthContextProps = {
   state: AuthState;
-  dispatch: Dispatch<ReducerAction<AuthInputState, string>>;
+  dispatch: Dispatch<ReducerAction<AuthInputState, AuthReducerAction>>;
 };
 
 export enum AuthReducerAction {
@@ -35,10 +35,10 @@ export const authInitialState: AuthState = {
 
 export type AuthReducerProps = {
   initialState: AuthState;
-  reducer: Reducer<AuthState, ReducerAction<AuthInputState>>;
+  reducer: Reducer<AuthState, ReducerAction<AuthInputState, AuthReducerAction>>;
 };
 
-export const AuthReducer = async (
+export const AuthReducer = (
   state = authInitialState,
   action: ReducerAction<AuthInputState>,
 ) => {
@@ -60,7 +60,7 @@ export const AuthReducer = async (
       };
 
     case AuthReducerAction.INIT:
-      const user = await getSession();
+      const user = getSession();
 
       return {
         ...state,
