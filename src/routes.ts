@@ -7,6 +7,7 @@ const Chats = 'Chats';
 const Chat = 'Chat';
 const Favorites = 'Favorites';
 const ChatStack = 'ChatStack';
+const AddPet = 'AddPet';
 
 export default {
   Home,
@@ -18,4 +19,5 @@ export default {
   Chat,
   Favorites,
   ChatStack,
+  AddPet,
 };

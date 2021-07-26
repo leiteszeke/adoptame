@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/native';
 import Button, { ButtonVariant } from 'components/Button';
-import { Back } from 'components/Icons';
 import Input, { ForwardedInputProps } from 'components/Input';
 import Wrapper from 'components/Wrapper';
 import C, { apply } from 'consistencss';
@@ -12,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthReducerAction } from 'reducers/AuthReducer';
 import { LOGIN_USER } from 'services/users';
 import Routes from 'routes';
+import Icons from 'components/Icons';
 
 const Login = () => {
   const { goBack, navigate } = useNavigation();
@@ -52,7 +52,7 @@ const Login = () => {
       <TouchableOpacity
         style={apply(C.ml3, C.mt3, C.h9, C.w9)}
         onPress={goBack}>
-        <Back />
+        <Icons.Back />
       </TouchableOpacity>
       <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>
         <Text style={apply(C.font8, C.textLight3, C.weightBold)}>Ingresa</Text>

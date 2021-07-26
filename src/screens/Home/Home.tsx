@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, ViewStyle } from 'react-native';
 import C, { apply } from 'consistencss';
 import PetCard, { EmptyPetCard } from 'components/PetCard';
-import Wrapper, { WrapperScrollView } from 'components/Wrapper';
+import Wrapper, { WrapperContentType } from 'components/Wrapper';
 import Icons from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { EventRegister } from 'react-native-event-listeners';
@@ -52,48 +52,49 @@ const Home = () => {
   }, [refetch, search]);
 
   return (
-    <Wrapper>
-      <WrapperScrollView
-        leftIcon={Icons.Menu}
-        leftIconPress={openDrawer}
-        onSearch={handleSearch}
-        isEmpty={pets.length === 0}>
-        {pets.length === 0 && (
-          <NoResultsScreen
-            component={DogWalking}
-            message={
-              search.length === 0
-                ? 'De momento, no tenemos mascotas en adopción.'
-                : 'No hay resultados para tu búsqueda.'
+    <Wrapper
+      type={WrapperContentType.Scroll}
+      contentProps={{
+        leftIcon: Icons.Menu,
+        leftIconPress: openDrawer,
+        onSearch: handleSearch,
+        isEmpty: pets.length === 0,
+      }}>
+      {pets.length === 0 && (
+        <NoResultsScreen
+          component={DogWalking}
+          message={
+            search.length === 0
+              ? 'De momento, no tenemos mascotas en adopción.'
+              : 'No hay resultados para tu búsqueda.'
+          }
+        />
+      )}
+
+      {pets.map((petRow, petIndex) => (
+        <View
+          key={petIndex}
+          style={apply(C.row, C.itemsStart, C.mb4, C.justifyBetween)}>
+          {petRow.map((pet, index) => {
+            if (!pet) {
+              return <EmptyPetCard key={index} />;
             }
-          />
-        )}
 
-        {pets.map((petRow, petIndex) => (
-          <View
-            key={petIndex}
-            style={apply(C.row, C.itemsStart, C.mb4, C.justifyBetween)}>
-            {petRow.map((pet, index) => {
-              if (!pet) {
-                return <EmptyPetCard key={index} />;
-              }
+            if (index % 2 === 0) {
+              return <PetCard {...pet} key={pet._id} onPress={goPet} />;
+            }
 
-              if (index % 2 === 0) {
-                return <PetCard {...pet} key={pet._id} onPress={goPet} />;
-              }
-
-              return (
-                <PetCard
-                  containerStyle={apply(C.top8, C.ml4) as ViewStyle}
-                  {...pet}
-                  key={pet._id}
-                  onPress={goPet}
-                />
-              );
-            })}
-          </View>
-        ))}
-      </WrapperScrollView>
+            return (
+              <PetCard
+                containerStyle={apply(C.top8, C.ml4) as ViewStyle}
+                {...pet}
+                key={pet._id}
+                onPress={goPet}
+              />
+            );
+          })}
+        </View>
+      ))}
     </Wrapper>
   );
 };

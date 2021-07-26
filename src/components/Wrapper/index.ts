@@ -1,4 +1,5 @@
-import Wrapper, { WrapperScrollView } from './Wrapper';
+import Wrapper from './Wrapper';
+import { WrapperContentType } from './Wrapper.types';
 
-export { WrapperScrollView };
+export { WrapperContentType };
 export default Wrapper;

@@ -2,11 +2,7 @@ import { theme } from 'consistencss';
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-function SvgComponent({
-  color = theme.colors.light3,
-  size = 24,
-  outline = true,
-}) {
+const Heart = ({ color = theme.colors.light3, size = 24, outline = true }) => {
   if (!outline) {
     return (
       <Svg width={size} height={size} viewBox="0 0 16 16" fill="none">
@@ -26,6 +22,6 @@ function SvgComponent({
       />
     </Svg>
   );
-}
+};
 
-export default SvgComponent;
+export default Heart;

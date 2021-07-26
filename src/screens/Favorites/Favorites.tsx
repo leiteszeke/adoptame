@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PetCard from 'components/PetCard';
-import Wrapper, { WrapperScrollView } from 'components/Wrapper';
+import Wrapper, { WrapperContentType } from 'components/Wrapper';
 import Icons from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@apollo/client';
@@ -38,22 +38,23 @@ const Favorites = () => {
   }
 
   return (
-    <Wrapper>
-      <WrapperScrollView
-        leftIcon={Icons.Menu}
-        leftIconPress={() => {}}
-        title="Favoritos"
-        isEmpty={data?.pets.length === 0}>
-        {data?.pets.length === 0 && (
-          <NoResultsScreen
-            component={DogWalking}
-            message={'No hay resultados para tu búsqueda.'}
-          />
-        )}
-        {data?.pets?.map(pet => (
-          <PetCard key={pet._id} horizontal {...pet} onPress={goPet} />
-        ))}
-      </WrapperScrollView>
+    <Wrapper
+      type={WrapperContentType.Scroll}
+      contentProps={{
+        leftIcon: Icons.Menu,
+        leftIconPress: () => {},
+        title: 'Favoritos',
+        isEmpty: data?.pets.length === 0,
+      }}>
+      {data?.pets.length === 0 && (
+        <NoResultsScreen
+          component={DogWalking}
+          message={'No hay resultados para tu búsqueda.'}
+        />
+      )}
+      {data?.pets?.map(pet => (
+        <PetCard key={pet._id} horizontal {...pet} onPress={goPet} />
+      ))}
     </Wrapper>
   );
 };

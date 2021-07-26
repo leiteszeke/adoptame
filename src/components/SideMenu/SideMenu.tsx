@@ -62,7 +62,11 @@ export const SideMenu = () => {
         <MenuItem icon={Icons.Donate} text="Donar" route="" />
         {user && (
           <>
-            <MenuItem icon={Icons.Foot} text="Agregar mascota" />
+            <MenuItem
+              icon={Icons.Foot}
+              text="Agregar mascota"
+              route={Routes.AddPet}
+            />
 
             <MenuItem
               icon={Icons.HeartFilled}
