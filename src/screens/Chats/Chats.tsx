@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import C, { apply } from 'consistencss';
+import C, { apply, classNames } from 'consistencss';
 import Wrapper from 'components/Wrapper';
-import { Back } from 'components/Icons';
+import Icons from 'components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery } from '@apollo/client';
@@ -18,6 +18,9 @@ import * as Images from 'assets/images';
 import { User } from 'services/users';
 import { useUser } from 'hooks/Auth';
 import NotLoggedScreen from 'components/NotLoggedScreen';
+import Routes from 'routes';
+import NoResultsScreen from 'components/NoResultsScreen';
+import { EmptyChats } from 'components/Illustrations';
 
 const Chats = () => {
   const { goBack, navigate } = useNavigation();
@@ -26,7 +29,7 @@ const Chats = () => {
   const { data } = useQuery<{ chats: Chat[] }>(GET_CHATS);
 
   const goChat = (_id: string, other: User) => () => {
-    navigate('Chat', { _id, other });
+    navigate(Routes.Chat, { _id, other });
   };
 
   const renderItem = ({ item: chat }: { item: Chat }) => (
@@ -69,7 +72,7 @@ const Chats = () => {
     </TouchableOpacity>
   );
 
-  const openLogin = () => navigate('Login');
+  const openLogin = () => navigate(Routes.Login);
 
   if (!user) {
     return (
@@ -86,30 +89,31 @@ const Chats = () => {
       <TouchableOpacity
         style={apply(C.ml3, C.mt3, C.h9, C.w9)}
         onPress={() => goBack()}>
-        <Back />
+        <Icons.Back />
       </TouchableOpacity>
       <View style={apply(C.mx3, C.row, C.h12, C.itemsCenter, C.mt1)}>
         <Text style={apply(C.font8, C.textLight3, C.weightBold)}>Chats</Text>
       </View>
       <View
-        style={apply(
-          C.radiustop4,
-          C.bgLight1,
-          C.absolute,
-          C.wFull,
-          C.pt3,
-          C.px4,
-          {
-            height: '83%',
-            bottom: 15,
-            paddingBottom: insets.bottom - 8,
-          },
-        )}>
+        style={apply(C.radiustop4, C.bgLight1, C.absolute, C.wFull, C.px4, {
+          height: '83%',
+          bottom: 15,
+          paddingBottom: insets.bottom - 2,
+        })}>
         <FlatList
           data={data?.chats ?? []}
           keyExtractor={i => i._id}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
+          ListEmptyComponent={
+            <NoResultsScreen
+              component={EmptyChats}
+              message={'Aún no tienes chats.'}
+            />
+          }
+          contentContainerStyle={classNames({
+            flex: (data?.chats?.length ?? 0) === 0,
+          })}
         />
       </View>
     </Wrapper>

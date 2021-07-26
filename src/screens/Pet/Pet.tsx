@@ -17,6 +17,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_PET_LIKE, DELETE_PET_LIKE } from 'services/petLikes';
 import { GET_PETS, Pet } from 'services/pets';
 import * as Images from 'assets/images';
+import Routes from 'routes';
 
 const { width } = Dimensions.get('screen');
 
@@ -36,8 +37,8 @@ const PetScreen = () => {
   const imageSize = width - 24;
 
   const goChat = () =>
-    navigation.navigate('ChatStack', {
-      screen: 'Chat',
+    navigation.navigate(Routes.ChatStack, {
+      screen: Routes.Chat,
       params: {
         userId: pet?.owner._id,
         name: pet?.name,

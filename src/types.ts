@@ -14,3 +14,8 @@ export type ReducerAction<P, T = string> = {
   type: T;
   payload?: Partial<P>;
 };
+
+export type NonColorableSVG = {
+  height?: number;
+  width?: number;
+};

@@ -15,6 +15,7 @@ import { RootStackParamList } from 'types';
 import * as Images from 'assets/images';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_MESSAGE, GET_CHAT, Chat } from 'services/chats';
+import Routes from 'routes';
 
 const ChatScreen = () => {
   const currentUser = { _id: '' };
@@ -34,8 +35,8 @@ const ChatScreen = () => {
   });
 
   const goChats = () => {
-    navigation.navigate('ChatStack', {
-      screen: 'Chats',
+    navigation.navigate(Routes.ChatStack, {
+      screen: Routes.Chats,
     });
   };
 

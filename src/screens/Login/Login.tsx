@@ -11,6 +11,7 @@ import { Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthReducerAction } from 'reducers/AuthReducer';
 import { LOGIN_USER } from 'services/users';
+import Routes from 'routes';
 
 const Login = () => {
   const { goBack, navigate } = useNavigation();
@@ -79,7 +80,7 @@ const Login = () => {
           containerStyle={apply(C.mt6, C.mb4) as ViewStyle}
           text="Crear una cuenta"
           variant={ButtonVariant.Secondary}
-          onPress={() => navigate('Register')}
+          onPress={() => navigate(Routes.Register)}
         />
       </View>
     </Wrapper>

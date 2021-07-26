@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { enableScreens } from 'react-native-screens';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import C, { apply, extend, theme } from 'consistencss';
-import * as Icons from 'components/Icons';
+import Icons from 'components/Icons';
 import Home from 'screens/Home/Home';
 import Chat from 'screens/Chat/Chat';
 import Pet from 'screens/Pet/Pet';
@@ -24,6 +24,7 @@ import SideMenu from 'components/SideMenu';
 import Login from 'screens/Login/Login';
 import Register from 'screens/Register/Register';
 import { navigationRef } from 'services/navigation';
+import Routes from './routes';
 
 enableScreens();
 
@@ -86,8 +87,8 @@ const tabBarOptions = (screen: string, options?: any) => () => ({
 
 const ChatStack = () => (
   <Stack.Navigator headerMode="none">
-    <Stack.Screen name="Chats" component={Chats} />
-    <Stack.Screen name="Chat" component={Chat} />
+    <Stack.Screen name={Routes.Chats} component={Chats} />
+    <Stack.Screen name={Routes.Chat} component={Chat} />
   </Stack.Navigator>
 );
 
@@ -99,14 +100,18 @@ const TabStack = () => (
       style: apply(C.bgBrand2, C.radiustop4, C.absolute),
       showLabel: false,
     }}>
-    <Tab.Screen name="Home" options={tabBarOptions('Home')} component={Home} />
     <Tab.Screen
-      name="Favorites"
+      name={Routes.Home}
+      options={tabBarOptions('Home')}
+      component={Home}
+    />
+    <Tab.Screen
+      name={Routes.Favorites}
       options={tabBarOptions('Favorites')}
       component={Favorites}
     />
     <Tab.Screen
-      name="ChatStack"
+      name={Routes.ChatStack}
       options={tabBarOptions('Chat')}
       component={ChatStack}
     />
@@ -186,10 +191,10 @@ const App = () => {
           })}
         />
         <Stack.Navigator mode="modal" headerMode="none">
-          <Stack.Screen name="Tabs" component={TabStack} />
-          <Stack.Screen name="Pet" component={Pet} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name={Routes.Tabs} component={TabStack} />
+          <Stack.Screen name={Routes.Pet} component={Pet} />
+          <Stack.Screen name={Routes.Login} component={Login} />
+          <Stack.Screen name={Routes.Register} component={Register} />
         </Stack.Navigator>
       </Animated.View>
     </>

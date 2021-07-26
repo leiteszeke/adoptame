@@ -12,7 +12,9 @@ const NoResultsScreen = ({
   return (
     <View style={apply(C.flex, C.itemsCenter, C.justifyCenter, C.px4)}>
       <Component height={200} width={200} />
-      <Text style={apply(C.mt3, C.alignCenter, C.font4)}>{message}</Text>
+      <View style={apply(C.mt3, C.h12)}>
+        <Text style={apply(C.alignCenter, C.font4)}>{message}</Text>
+      </View>
     </View>
   );
 };

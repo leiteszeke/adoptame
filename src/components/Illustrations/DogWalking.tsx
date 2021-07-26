@@ -1,10 +1,6 @@
 import * as React from 'react';
 import Svg, { Path, Circle, Ellipse } from 'react-native-svg';
-
-type NonColorableSVG = {
-  height?: number;
-  width?: number;
-};
+import { NonColorableSVG } from 'types';
 
 const DogWalking = ({ height = 522.418, width = 741.846 }: NonColorableSVG) => {
   return (

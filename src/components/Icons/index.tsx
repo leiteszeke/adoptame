@@ -1,3 +1,4 @@
+import React from 'react';
 import Attach from './Attach';
 import Back from './Back';
 import Chat from './Chat';
@@ -12,13 +13,16 @@ import Search from './Search';
 import Send from './Send';
 import Settings from './Settings';
 
-export {
+const HeartFilled = (props: any) => <Heart outline={false} {...props} />;
+
+export default {
   Attach,
   Back,
   Chat,
   Donate,
   Foot,
   Heart,
+  HeartFilled,
   Home,
   Location,
   Logout,
