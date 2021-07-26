@@ -2,6 +2,7 @@ import Icons from 'components/Icons';
 import C, { apply, classNames, theme } from 'consistencss';
 import React from 'react';
 import {
+  KeyboardAvoidingView,
   ScrollView,
   Text,
   TextInput,
@@ -27,12 +28,14 @@ import {
 const Wrapper = ({
   children,
   containerStyle,
-  withTabs = false,
-  type = WrapperContentType.View,
   contentProps,
+  type = WrapperContentType.View,
+  withTabs = false,
+  withKeyboard = false,
 }: WrapperProps) => {
   const insets = useSafeAreaInsets();
 
+  const WrapperContent = withKeyboard ? KeyboardAvoidingView : View;
   let Container: any = React.Fragment;
   let spreadProps: WithInsets<WrapperProps['contentProps']> | {} = {};
 
@@ -62,9 +65,9 @@ const Wrapper = ({
         withTabs && { marginBottom: insets.bottom },
         containerStyle,
       )}>
-      <View style={C.flex}>
+      <WrapperContent style={C.flex}>
         <Container {...spreadProps}>{children}</Container>
-      </View>
+      </WrapperContent>
     </SafeAreaView>
   );
 };

@@ -18,6 +18,7 @@ export type WrapperProps = PropsWithChildren<{
   withTabs?: boolean;
   type?: WrapperContentType;
   contentProps?: WrapperScrollViewProps | WrapperFlatListProps;
+  withKeyboard?: boolean;
 }>;
 
 export type WithInsets<T> = T & {
